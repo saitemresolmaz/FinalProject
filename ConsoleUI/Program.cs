@@ -41,10 +41,21 @@ namespace ConsoleUI
             //    Console.WriteLine(product2.UnitPrice + " " + product2.ProductName);
             //}
 
-            foreach (var product in productManager.GetProductDetails()) //2 numaralı kategorideki ürünler
+            var result = productManager.GetProductDetails();
+
+            if (result.Success == true)
             {
-                Console.WriteLine(product.ProductName + "/" + product.CategoryName);
+                foreach (var product in result.Data) //2 numaralı kategorideki ürünler
+                {
+                    Console.WriteLine(product.ProductName + "/" + product.CategoryName);
+                }
             }
+
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+
         }
     }
 }
