@@ -28,7 +28,7 @@ namespace Business.Concrete
             _categoryService = categoryService;
 
         }
-        [SecuredOperation("product.add")]
+        [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
@@ -44,7 +44,7 @@ namespace Business.Concrete
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
         }
-
+        [SecuredOperation("product.add,admin")]
         public IDataResult<List<Product>> GetAll()
         {
             /*iş Kodları
