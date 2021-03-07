@@ -20,17 +20,17 @@ namespace Core.Utilities.Security.JWT
         public JwtHelper(IConfiguration configuration)
         {
             Configuration = configuration;
-            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>(); //appsettings.json ile TokenOptions mappingi
+            _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>(); //appsettings.json ile TokenOptions binding
 
         }
-        public AccessToken CreateToken(User user, List<OperationClaim> operationClaims)
+        public AccessToken CreateToken(User user, List<OperationClaim> operationClaims) //token oluşturma
         {
-            _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration); //şimdiye 10 minutes ekledik.
+            _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration); //şimdiye 10 minutes ekleyip bir tarihe dönüştürdük.
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
             var jwt = CreateJwtSecurityToken(_tokenOptions, user, signingCredentials, operationClaims);
             var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-            var token = jwtSecurityTokenHandler.WriteToken(jwt);
+            var token = jwtSecurityTokenHandler.WriteToken(jwt); //stringe çevirdik
 
             return new AccessToken
             {
@@ -47,7 +47,7 @@ namespace Core.Utilities.Security.JWT
                 issuer: tokenOptions.Issuer,
                 audience: tokenOptions.Audience,
                 expires: _accessTokenExpiration,
-                notBefore: DateTime.Now,
+                notBefore: DateTime.Now, //tokenın expiration bilgisi şu andan önceyse geçerli değil 
                 claims: SetClaims(user, operationClaims),
                 signingCredentials: signingCredentials
             );
